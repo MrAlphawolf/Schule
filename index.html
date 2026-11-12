@@ -9,43 +9,84 @@ layout: null
   <title>Lernseiten von Herrn Wolf</title>
   <style>
     body {
-      max-width: 44rem;
-      margin: 3rem auto;
+      max-width: 46rem;
+      margin: 2rem auto;
       padding: 0 1rem;
-      font: 1.1rem/1.5 system-ui, sans-serif;
-      color: #18304d;
+      font: 18px/1.5 system-ui, sans-serif;
+      color: #173554;
     }
-    ul { list-style: none; padding: 0; }
-    li { margin: 0.75rem 0; }
-    a {
-      display: block;
-      padding: 1rem;
-      background: #edf4fc;
-      border-radius: 0.6rem;
-      color: #153e70;
+    details { margin: .5rem 0; }
+    summary {
+      padding: .7rem 1rem;
+      background: #eaf2fb;
+      border-radius: .5rem;
+      cursor: pointer;
+      font-weight: bold;
     }
-    a:hover, a:focus-visible { background: #daeafa; }
-    small { display: block; color: #44586e; }
+    .inhalt {
+      margin-left: 1rem;
+      padding-left: .8rem;
+      border-left: 2px solid #d7e3ef;
+    }
+    a { display: block; padding: .65rem; color: #124b83; }
   </style>
 </head>
 <body>
   <h1>Lernseiten von Herrn Wolf</h1>
-  <p>Tippe auf eine Übung. Sie öffnet sich in einem neuen Tab.</p>
+  <p>Wähle deinen Ordner und tippe auf eine Übung.</p>
+  <nav id="ordnerbaum" aria-label="Lernseiten"></nav>
 
-  <ul>
-    {% assign dateien = site.static_files | sort: "path" %}
-    {% for datei in dateien %}
-      {% assign endung = datei.extname | downcase %}
-      {% if endung == ".html" or endung == ".htm" %}
-        {% assign ordner = datei.path | remove_first: "/" | split: "/" | pop | join: " › " %}
-        <li>
-          <a href="{{ datei.path | relative_url | escape }}" target="_blank" rel="noopener">
-            <strong>{{ datei.basename | replace: "_", " " | replace: "-", " " | escape }}</strong>
-            {% if ordner != "" %}<small>{{ ordner | escape }}</small>{% endif %}
-          </a>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
+  <script>
+    const dateien = [
+      {% assign sortiert = site.static_files | sort: "path" %}
+      {% for datei in sortiert %}
+        {% assign endung = datei.extname | downcase %}
+        {% if endung == ".html" or endung == ".htm" %}
+          {{ datei.path | jsonify }},
+        {% endif %}
+      {% endfor %}
+    ];
+
+    const start = document.getElementById("ordnerbaum");
+    const ordner = new Map([["", start]]);
+
+    for (const pfad of dateien) {
+      const teile = pfad.split("/").filter(Boolean);
+      const dateiname = teile.pop();
+      let ebene = start;
+      let schluessel = "";
+
+      for (const name of teile) {
+        schluessel += "/" + name;
+
+        if (!ordner.has(schluessel)) {
+          const fach = document.createElement("details");
+          const titel = document.createElement("summary");
+          const inhalt = document.createElement("div");
+
+          titel.textContent = name;
+          inhalt.className = "inhalt";
+          fach.append(titel, inhalt);
+          ebene.append(fach);
+          ordner.set(schluessel, inhalt);
+        }
+
+        ebene = ordner.get(schluessel);
+      }
+
+      const link = document.createElement("a");
+      link.href = "./" + [...teile, dateiname].map(encodeURIComponent).join("/");
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = dateiname
+        .replace(/\.html?$/i, "")
+        .replace(/[_-]+/g, " ");
+      ebene.append(link);
+    }
+
+    if (dateien.length === 0) {
+      start.textContent = "Es sind noch keine HTML-Übungen hochgeladen.";
+    }
+  </script>
 </body>
 </html>
