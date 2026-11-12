@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quadratwerkstatt · Quadrieren und Wurzelziehen</title>
+<style>
+:root {
+  font:17px/1.52 "Atkinson Hyperlegible Next",system-ui,sans-serif;
+  color:#172d40;
+  background:#f3f5f5;
+  --ink:#132e44;
+  --green:#006a60;
+  --line:#c7d3d5;
+}
+* {
+  box-sizing:border-box;
+}
+body {
+  margin:0;
+}
+header,main,footer {
+  max-width:1000px;
+  margin:auto;
+  padding:18px clamp(14px,4vw,40px);
+}
+header,nav,.row,.tools {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+header {
+  justify-content:space-between;
+}
+header strong {
+  letter-spacing:-.03em;
+}
+.logo {
+  display:inline-grid;
+  place-items:center;
+  background:var(--ink);
+  color:#abeee0;
+  border-radius:7px;
+  width:38px;
+  height:38px;
+  margin-right:8px;
+}
+button,select,input,textarea {
+  font:inherit;
+}
+button,select {
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:white;
+  padding:9px 15px;
+  min-height:45px;
+  color:var(--ink);
+  cursor:pointer;
+}
+button:hover,select:hover {
+  border-color:var(--green);
+}
+:focus-visible {
+  outline:3px solid #d18517;
+  outline-offset:2px;
+}
+.primary,[aria-current=true] {
+  background:var(--ink);
+  border-color:var(--ink);
+  color:white;
+}
+h1,h2,h3,p {
+  margin:0 0 .55em;
+}
+h1 {
+  line-height:1.08;
+  font-size:clamp(2rem,5vw,3.35rem);
+  letter-spacing:-.05em;
+}
+h2 {
+  letter-spacing:-.035em;
+  line-height:1.2;
+}
+.hero {
+  background:#15364b;
+  color:white;
+  padding:clamp(20px,4vw,38px);
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.hero p {
+  max-width:54ch;
+  color:#def2ee;
+}
+.hero svg {
+  width:145px;
+  flex:none;
+}
+.eyebrow {
+  font-size:.78rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  font-weight:750;
+  color:var(--green);
+}
+.hero .eyebrow {
+  color:#a2ead8;
+}
+.card,article {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:clamp(16px,3vw,26px);
+  margin:14px 0;
+}
+.card p:last-child {
+  margin-bottom:0;
+}
+label {
+  display:block;
+  font-weight:650;
+}
+input:not([type=checkbox]),textarea {
+  border:1px solid #86999e;
+  border-radius:7px;
+  padding:9px 12px;
+  min-height:46px;
+  width:100%;
+  color:var(--ink);
+  background:white;
+}
+textarea {
+  min-height:90px;
+  resize:vertical;
+}
+input[type=checkbox] {
+  width:22px;
+  height:22px;
+  vertical-align:middle;
+}
+.settings {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.settings select {
+  width:100%;
+}
+nav {
+  margin:20px 0;
+}
+.units {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+  gap:12px;
+}
+.unit {
+  background:#f3f7f6;
+  padding:13px;
+  border-radius:9px;
+}
+.unit label {
+  margin-bottom:6px;
+}
+.status,small,footer {
+  font-size:.87rem;
+}
+.status {
+  display:block;
+  margin-top:6px;
+  color:#40525c;
+}
+.good {
+  color:#006157;
+}
+.wrong {
+  color:#913d10;
+}
+.tools {
+  margin-top:17px;
+}
+details {
+  margin:12px 0;
+}
+summary {
+  cursor:pointer;
+  min-height:44px;
+  padding:10px 0;
+  color:var(--green);
+  font-weight:650;
+}
+.note {
+  padding:12px 15px;
+  border-left:4px solid #389c8b;
+  background:#e9f5f1;
+}
+.heft {
+  padding:10px 0;
+  cursor:pointer;
+}
+.footnav {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+.answer {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin:.6em 0;
+}
+td,th {
+  padding:7px;
+  text-align:left;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+  overflow-wrap:anywhere;
+}
+th {
+  font-size:.86em;
+}
+.report article h3 {
+  font-size:1.08em;
+}
+.report article p {
+  margin:.3em 0;
+}
+.report article {
+  padding:16px;
+}
+.dim {
+  color:#455d68;
+}
+#notice {
+  margin:6px 0;
+}
+.off {
+  display:none!important;
+}
+@media(max-width:620px) {
+  .hero svg {
+    width:74px;
+  }
+  .hero {
+    gap:8px;
+  }
+  .settings {
+    grid-template-columns:1fr;
+  }
+  .units {
+    grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
+  }
+  header,main {
+    padding-top:10px;
+  }
+  header button {
+    font-size:.85rem;
+  }
+  .report table {
+    font-size:.86em;
+  }
+}
+@page {
+  size:A4;
+  margin:15mm;
+}
+@media print {
+  html,body {
+    font:10.5pt/1.35 Arial,sans-serif;
+    background:white;
+    color:black;
+  }
+  header,footer,.screen,#work,nav,.hero,.settings {
+    display:none!important;
+  }
+  main {
+    padding:0;
+    max-width:none;
+  }
+  .report {
+    display:block!important;
+  }
+  .report article {
+    break-inside:avoid;
+    border:0;
+    border-bottom:1px solid #999;
+    border-radius:0;
+    padding:6pt 0;
+    margin:3pt 0;
+  }
+  .report h1 {
+    font-size:20pt;
+  }
+  .report h2 {
+    font-size:14pt;
+  }
+  .note {
+    background:white;
+  }
+  .answer {
+    white-space:pre-wrap;
+  }
+  th,td {
+    padding:3pt;
+  }
+}
+</style>
+</head>
+<body>
+<header><strong><span class="logo">x²</span>Quadratwerkstatt</strong><div class="row"><button data-view="work">Üben</button><button data-view="student">Meine Ergebnisse</button><button data-view="teacher">Abgabe</button></div></header>
+<main><noscript>Öffne die Datei in einem Browser mit aktiviertem JavaScript, um die Aufgaben zu bearbeiten.</noscript>
+<div id="work">
+<section class="hero"><div><p class="eyebrow">Mathematik · Klasse 9</p><h1>Quadrieren und<br>Wurzelziehen</h1><p>Du kannst zwischen Seitenlänge und Flächeninhalt eines Quadrats wechseln und deine Rechenart begründen.</p></div>
+<svg viewBox="0 0 140 145" role="img" aria-label="Quadrat der Seitenlänge a mit Flächeninhalt a²"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#65afab"/></pattern></defs><g transform="translate(10 10)"><rect width="100" height="100" fill="url(#grid)" stroke="#a2ead8" stroke-width="2"/><rect x="32" y="32" width="36" height="36" rx="5" fill="#15364b"/><text x="50" y="57" text-anchor="middle" font-size="22" fill="white">a²</text><text x="50" y="124" text-anchor="middle" fill="white">a</text></g></svg></section>
+<div class="card"><div class="settings"><label>Name oder Kürzel<input id="names" placeholder="Bei gemeinsamer Abgabe beide Namen"></label><label>Niveau für Station 2 und 3<select id="level"><option value="B">Basis · sicher rechnen</option><option value="P">Plus · Dezimalzahlen und Brüche</option></select></label></div><small id="notice" role="status"></small></div>
+<nav id="stations" aria-label="Stationen"></nav><div id="lesson"></div></div>
+<div id="report" class="report off"></div>
+</main><footer>Quadratwerkstatt · Mathematik 9</footer>
+<script>
+'use strict';
+// UNTERRICHTSINHALTE: Stationen, Aufgaben, Sollwerte, Einheiten, Tipps und Musterwege.
+// Jede Aufgabe besitzt eine dauerhafte Kennung. Bei inhaltlichen Änderungen den Speicherschlüssel anpassen.
+const stages=[
+ ['Start','Kopfrechnen','6 min','Rechne zuerst im Kopf. Vergleiche mit deiner Partnerin oder deinem Partner und prüfe dann am Bildschirm.'],
+ ['Rechnen','In beide Richtungen','13 min','Wechsle dich mit deinem Gegenüber ab: Eine Person rechnet, die andere erklärt die Probe. Tauscht nach jeder Zeile.'],
+ ['Quadrate','Vom Bild zur Rechnung','14 min','Bearbeite die Aufgaben zu zweit. Zeichne und rechne im Heft, trage die Ergebnisse hier ein. Nutze den Taschenrechner zur Probe.'],
+ ['Zielcheck','Was kannst du jetzt?','12 min','Löse den Zielcheck zunächst selbst. Vergleicht anschließend eure Wege. Am gemeinsamen iPad hältst du eure vereinbarte Antwort fest.'],
+ ['Zusatz','Wenn du früher fertig bist','bis 15 min','Untersuche die Behauptung im Heft und halte deine Entdeckung hier fest.']
+];
+function field(label,value,unit=''){return {label,value,unit}}
+function task(id,stage,level,title,prompt,fields,tip,solution,extra={}){return {id,stage,level,title,prompt,fields,tip,solution,...extra}}
+const tasks=[
+ task('1a',0,'','Zahlenpaare','Ergänze beide Rechenrichtungen.',[field('8²',64),field('√64',8),field('13²',169),field('√169',13)],'Schreibe 8² als 8 · 8. Lies die Rechnung anschließend rückwärts.','8 · 8 = 64 und 13 · 13 = 169. Die Quadratwurzel liefert jeweils die nichtnegative Zahl, deren Quadrat unter der Wurzel steht.'),
+ task('1b',0,'','Auf das Vorzeichen achten','Bestimme die drei Werte. Erkläre deinem Gegenüber, welche Rolle die Klammer spielt.',[field('(−5)²',25),field('−(5²)',-25),field('√25',5)],'Markiere die Basis der Potenz. Bei −(5²) steht das Minus außerhalb der Klammer.','(−5) · (−5) = 25. Bei −(5²) rechnest du zuerst 5 · 5 und erhältst danach −25. √25 = 5.'),
+ task('2B-a',1,'B','Quadrate berechnen','Berechne die Quadrate. Schreibe den Dezimalfall als Produkt ins Heft.',[field('14²',196),field('20²',400),field('0,6²',0.36)],'Rechne 6 · 6. In 0,6 · 0,6 haben die Faktoren zusammen zwei Nachkommastellen.','14 · 14 = 196, 20 · 20 = 400 und 0,6 · 0,6 = 0,36.',{book:'Ich habe den Dezimalfall als Produkt im Heft notiert.'}),
+ task('2B-b',1,'B','Wurzeln bestimmen','Ziehe die Wurzel. Prüfe eine Antwort im Heft durch Quadrieren.',[field('√81',9),field('√225',15),field('√0,49',0.7)],'Welche positive Zahl mal sich selbst ergibt 225? Probiere eine Zahl zwischen 10 und 20.','9² = 81, 15² = 225 und 0,7² = 0,49. Die Wurzeln sind 9, 15 und 0,7.',{book:'Ich habe eine Probe im Heft gerechnet.'}),
+ task('2P-a',1,'P','Dezimalzahlen und Brüche','Berechne die Quadrate. Notiere den Bruch als Produkt im Heft.',[field('(−1,2)²',1.44),field('(3/4)²',0.5625),field('0,05²',0.0025)],'Multipliziere beim Bruch Zähler mit Zähler und Nenner mit Nenner.','(−1,2) · (−1,2) = 1,44. (3/4) · (3/4) = 9/16. 0,05 · 0,05 = 0,0025.',{book:'Ich habe das Produkt der beiden Brüche im Heft notiert.'}),
+ task('2P-b',1,'P','Die passende Wurzel','Berechne die Wurzeln. Halte eine Probe im Heft fest.',[field('√1,69',1.3),field('√(49/64)',0.875),field('√0,0004',0.02)],'Suche beim Bruch die Quadratwurzel des Zählers und des Nenners getrennt.','1,3² = 1,69. (7/8)² = 49/64. 0,02² = 0,0004. Deshalb sind die Wurzeln 1,3, 7/8 und 0,02.',{book:'Ich habe eine Probe im Heft gerechnet.'}),
+ ...[['B',6,81,9],['P',2.5,12.25,3.5]].map(([l,a,area,side])=>task('3'+l+'-a',2,l,'Zwei Quadrate im Heft','Zeichne Quadrat I mit a = '+de(a)+' cm in Originalgröße. Quadrat II hat A = '+de(area)+' cm². Skizziere es und beschrifte beide Zeichnungen mit a und A.',[field('I · Fläche in cm²',a*a,'cm²'),field('II · Seite in cm',side,'cm')],'Schreibe die bekannte Größe an die Seite oder in die Fläche. Welche Größe fehlt jeweils?','I: A = '+de(a)+' cm · '+de(a)+' cm = '+de(a*a)+' cm². II: a = √('+de(area)+' cm²) = '+de(side)+' cm, denn '+de(side)+'² = '+de(area)+'.',{book:'Ich habe beide Quadrate im Heft gezeichnet und beschriftet.'})),
+ ...[['B',36,6],['P',30.25,5.5]].map(([l,area,side])=>task('3'+l+'-b',2,l,'Ein Seil für den Schulgarten','Ein quadratisches Beet hat '+de(area)+' m² Fläche. Ein Seil soll einmal am Rand entlangreichen. Bestimme Seitenlänge und Seillänge.',[field('Seitenlänge in m',side,'m'),field('Seillänge in m',4*side,'m')],'Bestimme zuerst eine Seitenlänge. Wie viele gleich lange Seiten hat der Rand?','a = √('+de(area)+' m²) = '+de(side)+' m. Das Seil umfasst vier Seiten: U = 4 · '+de(side)+' m = '+de(4*side)+' m.')),
+ task('4',3,'','Zielcheck · Zwei quadratische Platten','Platte A hat eine Seitenlänge von 1,2 m. Platte B hat eine Fläche von 1,96 m². Ergänze die fehlenden Größen. Begründe für beide Platten, warum du so rechnest.',[field('A · Fläche in m²',1.44,'m²'),field('B · Seite in m',1.4,'m')],'Beginne mit „Bei A kenne ich die Seite … Bei B kenne ich die Fläche …“. Prüfe die errechnete Länge durch Multiplikation.','Bei A kenne ich die Seite. Für die Fläche multipliziere ich Länge mit Breite: 1,2 m · 1,2 m = 1,44 m². Bei B suche ich die positive Seitenlänge. Ich ziehe die Wurzel: √(1,96 m²) = 1,4 m, denn 1,4² = 1,96.',{explain:'Warum quadrierst du bei der einen Platte und ziehst bei der anderen die Wurzel?'}),
+ task('5',4,'','Doppelte Seite, doppelte Fläche?','Ein Quadrat hat 3 cm Seitenlänge. Verdopple die Seite. Berechne beide Flächen und den Faktor, um den sich die Fläche verändert.',[field('Alte Fläche in cm²',9,'cm²'),field('Neue Fläche in cm²',36,'cm²'),field('Faktor',4)],'Zeichne ein 6-cm-Quadrat. Unterteile es in Quadrate mit 3 cm Seitenlänge.','3² = 9 und 6² = 36. Der Faktor ist 36 : 9 = 4. Beim Verdoppeln werden Länge und Breite je mit 2 multipliziert. Allgemein gilt (2a)² = 4a².',{explain:'Gilt dein Faktor für jede positive Seitenlänge? Begründe mit einer Skizze in Worten oder mit einer Rechnung.'})
+];
+const rule='Für ein Quadrat gilt A = a² und a = √A. Zur Seitenlänge gehört eine Längeneinheit, zur Fläche eine Flächeneinheit. Eine Quadratwurzel ist immer nichtnegativ.';
+function de(n){return String(n).replace('.',',')}
+const key='quadratwerkstatt-9-v1';
+const initial={names:'',level:'B',stage:0,answers:{},date:new Date().toLocaleDateString('de-DE')};
+let state=initial, available=true, view='work';
+try{const raw=localStorage.getItem(key);if(raw)state={...initial,...JSON.parse(raw)};}catch(e){available=false}
+const $=id=>document.getElementById(id);
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function save(){try{localStorage.setItem(key,JSON.stringify(state));available=true}catch(e){available=false}
+ $('notice').textContent=available?'Arbeitsstand auf diesem Gerät gespeichert.':'Lokales Speichern gesperrt. Sichere deinen Stand über „Meine Ergebnisse“ oder „Abgabe“.';
+}
+function answer(t){return state.answers[t.id]??=( {values:{},checks:{},text:'',book:false} )}
+function active(t){return !t.level||t.level===state.level}
+function status(t,i){const a=answer(t);if(!(a.values[i]||'').trim())return 'Offen';if(a.checks[i]===true)return 'Richtig · automatisch geprüft';if(a.checks[i]===false)return 'Noch nicht richtig · automatisch geprüft';return 'Eingegeben · ungeprüft'}
+function parseNumber(raw,unit){
+ let s=raw.trim().toLowerCase().replace(/−/g,'-').replace(/,/g,'.').replace(/\s*(cm|mm|m)(?:\s*(?:\^?2|²))?$/u,match=>match.replace(/\s/g,'').replace(/\^?2$/,'²'));
+ const suffix=s.match(/(cm|mm|m)²?$/);
+ let factor=1;
+ if(suffix){const u=suffix[0];if(!unit||u.endsWith('²')!==unit.endsWith('²'))return NaN;
+ const length={m:1,cm:.01,mm:.001};factor=(length[u.replace('²','')]/length[unit.replace('²','')])**(unit.endsWith('²')?2:1);s=s.slice(0,-u.length).trim()}
+ const parts=s.split(/\s*[\/⁄]\s*/);
+ if(parts.length>2||parts.some(p=>!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(p)))return NaN;
+ return Number(parts[0])/(parts.length===2?Number(parts[1]):1)*factor;
+}
+function feedback(t,i){
+ const a=answer(t),f=t.fields[i],s=status(t,i);
+ if(a.checks[i]!==false)return s;
+ const raw=a.values[i],num=parseNumber(raw,f.unit);
+ if(!Number.isFinite(num))return s+'. Prüfe Zahl und Einheit. Gib eine Zahl oder einen Bruch ein'+(f.unit?' (z. B. mit '+f.unit+')':'')+'.';
+ if(num<0 && f.label.startsWith('√'))return s+'. Die Quadratwurzel ist nichtnegativ.';
+ return s+'. '+t.tip;
+}
+function card(t){const a=answer(t);return '<article><p class="eyebrow">Aufgabe '+t.id+'</p><h3>'+t.title+'</h3><p>'+t.prompt+'</p><div class="units">'+t.fields.map((f,i)=>'<div class="unit"><label for="v'+t.id+i+'">'+f.label+'</label><input autocomplete="off" id="v'+t.id+i+'" data-id="'+t.id+'" data-i="'+i+'" value="'+escapeHtml(a.values[i])+'" aria-describedby="s'+t.id+i+'"><span class="status" aria-live="polite" id="s'+t.id+i+'"></span></div>').join('')+'</div><div class="tools"><button class="primary" data-check="'+t.id+'">Zahlen prüfen</button></div><details><summary>Tipp anzeigen</summary><p>'+t.tip+'</p></details>'+
+ (t.book?'<label class="heft"><input type="checkbox" data-book="'+t.id+'" '+(a.book?'checked':'')+'> '+t.book+'</label>':'')+
+ (t.explain?'<label>'+t.explain+'<textarea data-text="'+t.id+'">'+escapeHtml(a.text)+'</textarea></label><small>Dein Wortlaut · Selbstabgleich in „Meine Ergebnisse“.</small>':'')+'</article>'}
+function refreshStatus(t,i){const el=$('s'+t.id+i);el.textContent=feedback(t,i);el.className='status '+(answer(t).checks[i]===true?'good':answer(t).checks[i]===false?'wrong':'')}
+function renderWork(){
+ const n=state.stage, stage=stages[n],group=tasks.filter(t=>t.stage===n&&active(t));
+ $('stations').innerHTML=stages.map((s,i)=>'<button data-stage="'+i+'" aria-current="'+(n===i)+'">'+(i+1)+' · '+s[0]+'</button>').join('');
+ $('lesson').innerHTML='<div class="card"><p class="eyebrow">'+(n===4?'Freiwillige Vertiefung':'Partnerarbeit')+' · '+stage[2]+'</p><h2>'+stage[1]+'</h2><p>'+stage[3]+'</p></div>'+group.map(card).join('')+'<div class="footnav">'+(n?'<button data-stage="'+(n-1)+'">Zurück</button>':'<span></span>')+(n<3?'<button class="primary" data-stage="'+(n+1)+'">Weiter zu '+stages[n+1][0]+' →</button>':'<button class="primary" data-view="student">Meine Ergebnisse →</button>')+'</div>';
+ group.forEach(t=>t.fields.forEach((f,i)=>refreshStatus(t,i)));
+}
+function reportBody(teacher){
+ const selected=tasks.filter(t=>active(t)||Object.values(answer(t).values).some(Boolean)||answer(t).book||answer(t).text);
+ const meta=escapeHtml(state.names.trim()||'Name noch offen')+' · '+escapeHtml(state.date)+' · Niveau '+(state.level==='P'?'Plus':'Basis');
+ return '<p class="eyebrow">Quadratwerkstatt · Mathematik 9</p><h1>'+(teacher?'Abgabe':'Meine Ergebnisse')+'</h1><h2>Quadrieren und Wurzelziehen</h2><p>'+meta+'</p>'+(teacher?'<p><b>Lernzielnachweis</b> · Aufgabe 4 mit Rechenwerten und eigener Begründung.</p>':'<p class="note"><b>Merksatz</b> · '+rule+'</p>')+selected.map(t=>{
+ const a=answer(t);
+ return '<article><h3>'+t.id+' · '+t.title+'</h3>'+(t.stage===4?'<small>Freiwilliger Zusatz</small>':'')+(!teacher?'<p>'+t.prompt+'</p>':'')+'<table><thead><tr><th>Gesucht</th><th>Deine Antwort</th><th>Rückmeldung</th></tr></thead><tbody>'+t.fields.map((f,i)=>'<tr><td>'+f.label+'</td><td class="answer">'+escapeHtml(a.values[i]||'—')+'</td><td>'+escapeHtml(teacher?status(t,i):feedback(t,i))+'</td></tr>').join('')+'</tbody></table>'+
+ (t.explain?'<p><b>Eigene Begründung</b> · '+(a.text.trim()?'Freitext, ungeprüft':'offen')+'</p><p class="answer">'+escapeHtml(a.text)+'</p>':'')+
+ (t.book?'<p><b>Heftauftrag</b> · '+(a.book?'selbst bestätigt':'Bestätigung offen')+' · '+t.book+'</p>':'')+
+ (!teacher?'<p><b>Musterweg und Begründung</b> · '+t.solution+'</p>':'')+'</article>';
+ }).join('');
+}
+function filename(){return (state.names.trim().replace(/[^\p{L}\p{N}._-]+/gu,'_')||'Ohne_Name')+'_Quadrieren_und_Wurzelziehen_'+(view==='teacher'?'Abgabe':'Ergebnisse')}
+function report(){const teacher=view==='teacher';$('report').innerHTML='<div class="screen card"><div class="row"><button data-print>Drucken / Als PDF sichern</button><button data-download>Bericht als HTML speichern</button></div><p>Speichere deine Abgabe und übermittle sie selbst über den im Unterricht vereinbarten Weg.</p><small>Dateiname: '+escapeHtml(filename())+'</small></div>'+reportBody(teacher)}
+function show(which){view=which;$('work').classList.toggle('off',view!=='work');$('report').classList.toggle('off',view==='work');document.querySelectorAll('header button').forEach(b=>b.setAttribute('aria-current',b.dataset.view===view));if(view==='work')renderWork();else report();document.title=view==='work'?'Quadratwerkstatt':filename();window.scrollTo(0,0)}
+document.addEventListener('input',e=>{
+ const el=e.target,d=el.dataset;
+ if(el.id==='names')state.names=el.value;
+ else if(d.i!==undefined){const t=tasks.find(t=>t.id===d.id),a=answer(t);a.values[d.i]=el.value;delete a.checks[d.i];refreshStatus(t,d.i)}
+ else if(d.text)state.answers[d.text].text=el.value;
+ else return;
+ save();
+});
+document.addEventListener('change',e=>{const el=e.target;if(el.id==='level'){state.level=el.value;renderWork();save()}else if(el.dataset.book){state.answers[el.dataset.book].book=el.checked;save()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.view)show(d.view);
+ if(d.stage!==undefined){state.stage=Number(d.stage);renderWork();save();$('stations').scrollIntoView({block:'start'})}
+ if(d.check){const t=tasks.find(t=>t.id===d.check),a=answer(t);t.fields.forEach((f,i)=>{const raw=(a.values[i]||'').trim();if(raw)a.checks[i]=Math.abs(parseNumber(raw,f.unit)-f.value)<1e-10;else delete a.checks[i];refreshStatus(t,i)});save()}
+ if('print' in d)window.print();
+ if('download' in d){
+ const html='<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escapeHtml(filename())+'</title><style>'+document.querySelector('style').textContent+'</style><main class="report">'+reportBody(view==='teacher')+'</main></html>';
+ const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=filename()+'.html';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ }
+});
+window.addEventListener('beforeprint',()=>{if(view==='work')$('report').innerHTML=reportBody(false)});
+$('names').value=state.names;$('level').value=state.level;show('work');save();
+</script>
+</body></html>
