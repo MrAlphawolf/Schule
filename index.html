@@ -1,0 +1,51 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lernseiten von Herrn Wolf</title>
+  <style>
+    body {
+      max-width: 44rem;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      font: 1.1rem/1.5 system-ui, sans-serif;
+      color: #18304d;
+    }
+    ul { list-style: none; padding: 0; }
+    li { margin: 0.75rem 0; }
+    a {
+      display: block;
+      padding: 1rem;
+      background: #edf4fc;
+      border-radius: 0.6rem;
+      color: #153e70;
+    }
+    a:hover, a:focus-visible { background: #daeafa; }
+    small { display: block; color: #44586e; }
+  </style>
+</head>
+<body>
+  <h1>Lernseiten von Herrn Wolf</h1>
+  <p>Tippe auf eine Übung. Sie öffnet sich in einem neuen Tab.</p>
+
+  <ul>
+    {% assign dateien = site.static_files | sort: "path" %}
+    {% for datei in dateien %}
+      {% assign endung = datei.extname | downcase %}
+      {% if endung == ".html" or endung == ".htm" %}
+        {% assign ordner = datei.path | remove_first: "/" | split: "/" | pop | join: " › " %}
+        <li>
+          <a href="{{ datei.path | relative_url | escape }}" target="_blank" rel="noopener">
+            <strong>{{ datei.basename | replace: "_", " " | replace: "-", " " | escape }}</strong>
+            {% if ordner != "" %}<small>{{ ordner | escape }}</small>{% endif %}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</body>
+</html>
